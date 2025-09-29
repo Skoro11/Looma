@@ -1,0 +1,17 @@
+@BASE_URL=http://localhost:3000
+
+
+### Base Path
+GET {{BASE_URL}}/
+
+
+### Register User
+
+POST {{BASE_URL}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "toni23",
+  "email": "toni@example.com",
+  "password": "strongpassword"
+}
