@@ -33,10 +33,9 @@ This document describes all REST endpoints and WebSocket events for the Chat App
 
 ```json
 {
-  "userId": "user1",
+  "_id": "user1",
   "username": "toni23",
-  "email": "toni@example.com",
-  "token": "JWT_TOKEN"
+  "email": "toni@example.com"
 }
 ```
 
@@ -55,11 +54,13 @@ This document describes all REST endpoints and WebSocket events for the Chat App
 
 **Response**
 
+Cookie: looma_token:"Access token"
+
 ```json
 {
-  "userId": "user1",
+  "_id": "userId",
   "username": "toni23",
-  "token": "JWT_TOKEN"
+  "email": "test@email.com"
 }
 ```
 
