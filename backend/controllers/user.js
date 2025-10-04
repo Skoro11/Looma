@@ -4,11 +4,21 @@ import { HashPassword, ComparePasswords } from "../utils/Bcrypt.js";
 export async function RegisterUser(req, res) {
   try {
     const { username, email, password } = req.body;
-
+    if (!username || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        code: "MISSING_FIELDS",
+        message: "There are missing fields",
+      });
+    }
     const existingUser = await User.findOne({ email });
-    if (existingUser)
-      return res.status(400).json({ message: "Email already in use" });
-
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        code: "EMAIL_IN_USE",
+        message: "Email already in use",
+      });
+    }
     const hashedPassword = await HashPassword(password);
 
     const newUser = await User.create({
@@ -18,20 +28,38 @@ export async function RegisterUser(req, res) {
     });
 
     await newUser.save();
-    res.status(201).json({ registeredUser: newUser });
+    return res.status(201).json({
+      success: true,
+      code: "USER_REGISTERED",
+      message: "User registered",
+    });
   } catch (error) {
-    console.log("Error RegisterUser ", error.message);
-    res.status(500).json({ errorMessage: error.message });
+    return res.status(500).json({
+      success: false,
+      code: "SERVER_ERROR",
+      message: "Something went wrong while registering",
+      errorMessage: error.message,
+    });
   }
 }
 
 export async function LoginUser(req, res) {
   try {
     const { email, password } = req.body;
-
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        code: "MISSING_FIELDS",
+        message: "There are missing fields",
+      });
+    }
     const user = await User.findOne({ email: email });
     if (!user) {
-      return res.status(404).json("User not found");
+      return res.status(404).json({
+        success: false,
+        code: "USER_NOT_FOUND",
+        message: "User not found",
+      });
     }
 
     const userDbPassword = user.password;
@@ -40,9 +68,13 @@ export async function LoginUser(req, res) {
 
     const isPasswordCorrrect = await ComparePasswords(password, userDbPassword);
     if (!isPasswordCorrrect) {
-      return res.status(401).json({ message: "Invalid Credentials" });
+      return res.status(401).json({
+        success: false,
+        code: "INVALID_CREDENTIALS",
+        message: "Invalid email or password",
+      });
     } else {
-      const accessToken = TokenCreation(user._id, user.email);
+      const accessToken = TokenCreation(user._id, user.email, user.username);
       res.cookie("looma_token", accessToken, {
         httpOnly: true,
         secure: true,
@@ -55,12 +87,21 @@ export async function LoginUser(req, res) {
       user.refreshToken = refreshToken;
       await user.save();
       return res.status(200).json({
-        message: "Logged in",
-        user: { _id: user._id, email: user.email, username: user.username },
+        success: true,
+        code: "LOGIN_SUCCESS",
+        message: "Logged in successfully",
+        data: {
+          user: { _id: user._id, email: user.email, username: user.username },
+        },
       });
     }
   } catch (error) {
-    res.status(500).json({ errorLoginUser: error.message });
+    return res.status(500).json({
+      success: false,
+      code: "SERVER_ERROR",
+      message: "Something went wrong while logging in",
+      errorMessage: error.message,
+    });
   }
 }
 

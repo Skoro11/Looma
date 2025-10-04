@@ -7,8 +7,11 @@ export function RefreshTokenCreation(id, email) {
   return token;
 }
 
-export function TokenCreation(id, email) {
-  const token = jwt.sign({ id: id, email: email }, process.env.JWT_SECRET);
+export function TokenCreation(id, email, username) {
+  const token = jwt.sign(
+    { id: id, email: email, username: username },
+    process.env.JWT_SECRET
+  );
   return token;
 }
 
@@ -17,7 +20,7 @@ export function TokenVerification(req, res, next) {
     const authHeader = req.headers.authorization;
     const token =
       req.cookies.looma_token || (authHeader && authHeader.split(" ")[1]);
-    console.log(token);
+
     if (!token) {
       console.log("No token");
       return res

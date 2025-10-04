@@ -1,0 +1,22 @@
+
+@BASE_URL=http://localhost:3000
+
+### Send Message
+
+POST {{BASE_URL}}/message
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTEyOGQxYzE4OTAzMWRhNjNmMTQwYSIsImVtYWlsIjoidG9uaUB0ZXMuY29tIiwidXNlcm5hbWUiOiJ0b25pIiwiaWF0IjoxNzU5NTg2NTIxfQ.Z3P0GhmSbGp42bHOrNUQ0FcGGlEUG1c7q5MhJ419j6k
+
+{
+  "chatId":"68e12ab8c189031da63f1480",
+  "content" : "Hello Michael"
+}
+
+### Get all user messages based on user and chat ID
+POST {{BASE_URL}}/all/messages
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZGU3Mjg2MTM0ODIzZGFjYjcyOTYwZSIsImVtYWlsIjoidG9uaUB0ZXN0LmNvbSIsInVzZXJuYW1lIjoidG9uaSIsImlhdCI6MTc1OTU3NDg0NX0.W3GQUXTXiDL0sshJ9m9U6el8lq09fX_L9JyEdTwHtok
+
+{
+  "chatId":"68e120f13aca07466abe14ce"
+}

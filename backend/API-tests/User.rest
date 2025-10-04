@@ -1,9 +1,9 @@
 @BASE_URL=http://localhost:3000
 
+### Check the token and allow access
 
-### Base Path
-GET {{BASE_URL}}/
-
+GET {{BASE_URL}}/api/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZGQ0MGZiMjczY2UwNDM4ZjllY2UwMiIsImVtYWlsIjoidG9uaUBleGFtcC5jb20iLCJpYXQiOjE3NTk0MDU5OTN9.579qBw4IOTSZ7NvgkXctYoBP7V2HDdrSTtkPVRHEexw
 
 ### Register User
 
@@ -11,8 +11,8 @@ POST {{BASE_URL}}/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "toni23",
-  "email": "toi@exa.com",
+  "username": "toni",
+  "email": "toni@tes.com",
   "password": "strongpassword"
 }
 
@@ -22,7 +22,7 @@ POST {{BASE_URL}}/api/auth/login
 Content-Type: application/json
 
 {
- "email": "toni@examp.com",
+ "email": "toni@test.com",
   "password": "strongpassword"
 }
 
@@ -32,33 +32,4 @@ GET {{BASE_URL}}/api/users
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZGI3N2M0ZGVjMTEwODYwY2U2YTA2ZiIsImVtYWlsIjoidG9uaUBleGFtcC5jb20iLCJpYXQiOjE3NTkyMzI3OTJ9.DhuMGz_3HPG-P8W6LDo_xO7isqWe1RVWRji6G4B_BRc
 
-### Create chat 
 
-POST {{BASE_URL}}/chats
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZGI3N2M0ZGVjMTEwODYwY2U2YTA2ZiIsImVtYWlsIjoidG9uaUBleGFtcC5jb20iLCJpYXQiOjE3NTkyMzI3OTJ9.DhuMGz_3HPG-P8W6LDo_xO7isqWe1RVWRji6G4B_BRc
-
-{
-  "friendId": "68dbb3a58efc370b4d56e9c8"
-}
-
-
-### Send Message
-
-POST {{BASE_URL}}/message
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZGI3N2M0ZGVjMTEwODYwY2U2YTA2ZiIsImVtYWlsIjoidG9uaUBleGFtcC5jb20iLCJpYXQiOjE3NTkyMzI3OTJ9.DhuMGz_3HPG-P8W6LDo_xO7isqWe1RVWRji6G4B_BRc
-
-{
-  "chatId":"68dbcf160b325f131334ce97",
-  "content" : "Hello Michael"
-}
-
-### Get all user messages based on user and chat ID
-GET {{BASE_URL}}/all/messages
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZGI3N2M0ZGVjMTEwODYwY2U2YTA2ZiIsImVtYWlsIjoidG9uaUBleGFtcC5jb20iLCJpYXQiOjE3NTkyMzI3OTJ9.DhuMGz_3HPG-P8W6LDo_xO7isqWe1RVWRji6G4B_BRc
-
-{
-  "chatId":"68dbcf160b325f131334ce97"
-}
