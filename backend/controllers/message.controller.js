@@ -40,15 +40,6 @@ export async function GetChatMessages(req, res) {
     const { chatId } = req.body;
 
     const chat = await Chat.findById(chatId);
-    if (!chat || !chat.participants.includes(userId)) {
-      return res.status(403).json({ error: "Access denied" });
-    }
-
-    const messages = await Message.find({ chatId })
-      .populate("senderId", "username")
-      .sort({ createdAt: 1 }); // oldest first
-
-    res.json({ messages });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

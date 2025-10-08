@@ -1,23 +1,41 @@
 import Chat from "../models/Chat.js";
-
+import Message from "../models/Message.js";
 export async function createChat(req, res) {
   try {
     const userId = req.user.id;
     const { friendId } = req.body;
+    let chatId = "";
+
     if (!friendId) return res.status(400).json({ error: "Friend ID required" });
 
     let chat = await Chat.findOne({
       participants: { $all: [userId, friendId], $size: 2 },
     });
 
+    /* console.log(chat); */
     if (!chat) {
       chat = await Chat.create({ participants: [userId, friendId] });
-      return res.status(201).json({ success: true, chat: chat });
+
+      chatId = chat._id;
+
+      /* console.log("Chat Id is " + chatId); */
+      const messages = await Message.find({ chatId })
+        .populate("senderId", "username")
+        .sort({ createdAt: 1 }); // oldest first
+      return res
+        .status(201)
+        .json({ success: true, chat: chat._id, messages: messages });
     }
     if (chat) {
+      chatId = chat._id;
+      /* console.log("Chat Id is " + chatId); */
+      const messages = await Message.find({ chatId })
+        .populate("senderId", "username")
+        .sort({ createdAt: 1 }); // oldest first
+
       return res
-        .status(409)
-        .json({ success: false, message: "Chat already exists" });
+        .status(200)
+        .json({ success: true, chat: chat._id, messages: messages });
     }
   } catch (error) {
     res.status(500).json({ success: false, errorMessage: error.message });

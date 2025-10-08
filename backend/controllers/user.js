@@ -107,8 +107,15 @@ export async function LoginUser(req, res) {
 
 export async function GetAllUsers(req, res) {
   try {
+    const { id } = req.user;
+    console.log("User id", id);
     const allUsers = await User.find({});
-    res.json({ users: allUsers });
+    /*  console.log("All Users", allUsers); */
+    const filteredUsers = allUsers.filter(
+      (user) => user._id.toString() !== id.toString()
+    );
+    /* console.log(filteredUsers); */
+    res.json({ users: filteredUsers });
   } catch (error) {
     res.status(500).json({ errorMessage: error.message });
   }
