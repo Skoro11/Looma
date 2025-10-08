@@ -1,0 +1,25 @@
+@BASE_URL=http://localhost:3000
+@CHAT_ID=68e0ffdcf8406590b9e58f97
+
+### Create chat by FriendId
+POST {{BASE_URL}}/chats
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTEyOGQxYzE4OTAzMWRhNjNmMTQwYSIsImVtYWlsIjoidG9uaUB0ZXMuY29tIiwidXNlcm5hbWUiOiJ0b25pIiwiaWF0IjoxNzU5NTg2NTIxfQ.Z3P0GhmSbGp42bHOrNUQ0FcGGlEUG1c7q5MhJ419j6k
+{
+  "friendId": "68e128d1c189031da63f140a"
+}
+
+### Find chat by user id
+GET {{BASE_URL}}/chats/user
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZGI3N2M0ZGVjMTEwODYwY2U2YTA2ZiIsImVtYWlsIjoidG9uaUBleGFtcC5jb20iLCJpYXQiOjE3NTkyMzI3OTJ9.DhuMGz_3HPG-P8W6LDo_xO7isqWe1RVWRji6G4B_BRc
+
+### Find all chats
+
+GET {{BASE_URL}}/chats/all
+Content-Type: application/json
+
+### Delete chat by ID
+
+DELETE {{BASE_URL}}/chats/delete/{{CHAT_ID}}
+Content-Type: application/json
