@@ -105,10 +105,10 @@ export async function LoginUser(req, res) {
   }
 }
 
-export async function GetAllUsers(req, res) {
+export async function GetAllOtherUsers(req, res) {
   try {
     const { id } = req.user;
-    console.log("User id", id);
+    /* console.log("User id", id); */
     const allUsers = await User.find({});
     /*  console.log("All Users", allUsers); */
     const filteredUsers = allUsers.filter(

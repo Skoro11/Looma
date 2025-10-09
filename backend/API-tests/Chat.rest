@@ -4,15 +4,16 @@
 ### Create chat by FriendId
 POST {{BASE_URL}}/chats
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTEyOGQxYzE4OTAzMWRhNjNmMTQwYSIsImVtYWlsIjoidG9uaUB0ZXMuY29tIiwidXNlcm5hbWUiOiJ0b25pIiwiaWF0IjoxNzU5NTg2NTIxfQ.Z3P0GhmSbGp42bHOrNUQ0FcGGlEUG1c7q5MhJ419j6k
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTY5OWNhNzJjYzA1MTgxYjNhZTg3NCIsImVtYWlsIjoidG9uaUB0ZXN0LmNvbSIsInVzZXJuYW1lIjoiUmF0ZSIsImlhdCI6MTc2MDAyNjM3OH0.8DJaeA7MsFlRr_oQDnHHg4l-kBZpG5zlPMw4vtAOSFE
+
 {
-  "friendId": "68e128d1c189031da63f140a"
+  "friendId": "68e7ad64b40c24c8918e4e05"
 }
 
 ### Find chat by user id
 GET {{BASE_URL}}/chats/user
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZGI3N2M0ZGVjMTEwODYwY2U2YTA2ZiIsImVtYWlsIjoidG9uaUBleGFtcC5jb20iLCJpYXQiOjE3NTkyMzI3OTJ9.DhuMGz_3HPG-P8W6LDo_xO7isqWe1RVWRji6G4B_BRc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTY5OWNhNzJjYzA1MTgxYjNhZTg3NCIsImVtYWlsIjoidG9uaUB0ZXN0LmNvbSIsInVzZXJuYW1lIjoiUmF0ZSIsImlhdCI6MTc2MDAyNjM3OH0.8DJaeA7MsFlRr_oQDnHHg4l-kBZpG5zlPMw4vtAOSFE
 
 ### Find all chats
 

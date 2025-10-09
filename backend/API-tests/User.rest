@@ -1,13 +1,9 @@
 @BASE_URL=http://localhost:3000
 
-### Check the token and allow access
-
-GET {{BASE_URL}}/api/auth/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZGQ0MGZiMjczY2UwNDM4ZjllY2UwMiIsImVtYWlsIjoidG9uaUBleGFtcC5jb20iLCJpYXQiOjE3NTk0MDU5OTN9.579qBw4IOTSZ7NvgkXctYoBP7V2HDdrSTtkPVRHEexw
 
 ### Register User
 
-POST {{BASE_URL}}/api/auth/register
+POST {{BASE_URL}}/auth/register
 Content-Type: application/json
 
 {
@@ -18,7 +14,7 @@ Content-Type: application/json
 
 ### Login User
 
-POST {{BASE_URL}}/api/auth/login
+POST {{BASE_URL}}/auth/login
 Content-Type: application/json
 
 {
@@ -28,8 +24,7 @@ Content-Type: application/json
 
 ### Get all users
 
-GET {{BASE_URL}}/api/users
+GET {{BASE_URL}}/user/others
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZGI3N2M0ZGVjMTEwODYwY2U2YTA2ZiIsImVtYWlsIjoidG9uaUBleGFtcC5jb20iLCJpYXQiOjE3NTkyMzI3OTJ9.DhuMGz_3HPG-P8W6LDo_xO7isqWe1RVWRji6G4B_BRc
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTY5OWNhNzJjYzA1MTgxYjNhZTg3NCIsImVtYWlsIjoidG9uaUB0ZXN0LmNvbSIsInVzZXJuYW1lIjoiUmF0ZSIsImlhdCI6MTc2MDAxNDQ5N30.-8h414pfePyPKtSsrj7Uk6dKlXskqvENFe_2Iah2ZvQ
 

@@ -2,14 +2,31 @@ import { useEffect, useState } from "react";
 import { CheckToken } from "../api/auth/CheckToken";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { socket } from "../../backend/utils/SocketIO";
 export function LandingPage() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [user, setUser] = useState({ id: "", email: "", username: "" });
   const [otherUsers, setOtherUsers] = useState([]);
-  const [chats, setChats] = useState([]);
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
   const [currentChat, setCurrentChat] = useState();
+
+  useEffect(() => {
+    socket.emit("connection", () => {
+      console.log("Connected to server with id:", socket.id);
+    });
+  });
+  useEffect(() => {
+    socket.emit("joinChat", currentChat);
+  }, [currentChat]);
+
+  useEffect(() => {
+    socket.on("newMessage", (msg) => {
+      setMessages((prev) => [...prev, msg]);
+    });
+
+    return () => socket.off("newMessage");
+  }, []);
 
   async function StartChat(friend_id) {
     try {
@@ -27,7 +44,9 @@ export function LandingPage() {
       console.log("Start chat response data", response.data);
       const chatId = response.data.chat;
       setCurrentChat(chatId);
-      const messages = response.data.messages;
+      /*       socket.emit("joinChat", chatId);
+       */ const messages = response.data.messages;
+      console.log("Response Messages", messages);
       setMessages(messages);
     } catch (error) {
       if (error.status === 409) {
@@ -44,6 +63,7 @@ export function LandingPage() {
       if (response.data.success === true) {
         toast.success("Chat deleted successfully");
       }
+      setMessages([]);
       setCurrentChat();
     } catch (error) {
       toast.error("Problem with deleting Chat");
@@ -51,30 +71,10 @@ export function LandingPage() {
     }
   }
 
-  async function ShowChatMessages(chat_id) {
-    try {
-      const response = await axios.post(
-        `${API_URL}/all/messages`,
-        {
-          chatId: chat_id,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-
-      console.log(response.data.messages);
-      const messagesArray = response.data.messages;
-
-      setMessages(messagesArray);
-      setCurrentChat(chat_id);
-    } catch (error) {}
-  }
-
   async function sendMessage() {
     try {
       const response = await axios.post(
-        `${API_URL}/message`,
+        `${API_URL}/chats/message`,
         {
           chatId: currentChat,
           content: messageInput,
@@ -82,7 +82,14 @@ export function LandingPage() {
         { withCredentials: true }
       );
       console.log("Send message response", response.data);
-      ShowChatMessages();
+      if (response.status === 200) {
+        const newMessage = {
+          chatId: currentChat,
+          senderId: { _id: user.id, username: user.username },
+          content: messageInput,
+        };
+        socket.emit("sendMessage", newMessage);
+      }
       setMessageInput("");
     } catch (error) {
       console.log(error.message);
@@ -98,7 +105,7 @@ export function LandingPage() {
     }
 
     async function getUsers() {
-      const response = await axios.get(`${API_URL}/api/users`, {
+      const response = await axios.get(`${API_URL}/user/others`, {
         withCredentials: true,
       });
       /* console.log("Response of getUsers ", response.data.users); */
@@ -109,6 +116,7 @@ export function LandingPage() {
     TokenResponse();
     getUsers();
   }, []);
+
   return (
     <div className="max-w-[1400px] mx-auto pt-10">
       <div className="bg-white shadow-xl rounded-2xl p-10 ">
@@ -151,7 +159,7 @@ export function LandingPage() {
             </ul>
           </div>
 
-          <div className="border w-3/4 relative min-h-screen">
+          <div className="border w-3/4 relative min-h-full">
             <h1>
               Chat Messages || UserId -- {user.id}{" "}
               {currentChat ? (

@@ -1,0 +1,28 @@
+
+@BASE_URL=http://localhost:3000
+
+### Register User
+
+POST {{BASE_URL}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "toni",
+  "email": "toni@tes.com",
+  "password": "strongpassword"
+}
+
+### Login User
+
+POST {{BASE_URL}}/auth/login
+Content-Type: application/json
+
+{
+ "email": "toni@test.com",
+  "password": "strongpassword"
+}
+
+### Check the token and allow access
+
+GET {{BASE_URL}}/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTY5OWNhNzJjYzA1MTgxYjNhZTg3NCIsImVtYWlsIjoidG9uaUB0ZXN0LmNvbSIsInVzZXJuYW1lIjoiUmF0ZSIsImlhdCI6MTc2MDAxNjA3N30.M6YRXju8qTx6gmeqY8B3PG_HXiQ4phGQfzg3IwpJVfU

@@ -57,17 +57,17 @@ export async function getChatByUserId(req, res) {
   }
 }
 
-export async function getAllChats(req, res) {
-  const allChats = await Chat.find({});
-
-  res.status(200).json({ allChats });
-}
 export async function removeChat(req, res) {
   try {
     const { id } = req.params;
     /* console.log("Remove Chat Id", id); */
     const removeChat = await Chat.findByIdAndDelete(id);
-
+    console.log("Removed chat", removeChat._id);
+    const removedChatId = removeChat._id;
+    const removeMessages = await Message.deleteMany({
+      chatId: removedChatId,
+    });
+    console.log("Deleted ", removeMessages);
     if (!removeChat) {
       return res.status(404).json({ message: "Chat is not found" });
     }
@@ -76,4 +76,44 @@ export async function removeChat(req, res) {
   } catch (error) {
     res.status(500).json({ errorMessage: error.message });
   }
+}
+
+export async function SendMessage(req, res) {
+  try {
+    const senderId = req.user.id;
+    const { chatId, content } = req.body;
+
+    if (!chatId || !content) {
+      return res.status(400).json({ error: "Missing fields" });
+    }
+    const chat = await Chat.findById(chatId);
+
+    if (!chat || !chat.participants.includes(senderId)) {
+      return res
+        .status(403)
+        .json({ error: "You cannot send a message to this chat" });
+    }
+
+    const receiverId = chat.participants.find(
+      (id) => id.toString() !== senderId
+    );
+
+    const message = await Message.create({
+      chatId,
+      senderId,
+      receiverId,
+      content,
+    });
+
+    chat.lastMessage = message._id;
+    res.json({ message });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+export async function getAllChats(req, res) {
+  const allChats = await Chat.find({});
+
+  res.status(200).json({ allChats });
 }
