@@ -28,3 +28,29 @@ GET {{BASE_URL}}/user/others
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTY5OWNhNzJjYzA1MTgxYjNhZTg3NCIsImVtYWlsIjoidG9uaUB0ZXN0LmNvbSIsInVzZXJuYW1lIjoiUmF0ZSIsImlhdCI6MTc2MDAxNDQ5N30.-8h414pfePyPKtSsrj7Uk6dKlXskqvENFe_2Iah2ZvQ
 
+
+
+### Add friend to a user
+POST {{BASE_URL}}/user/friends/add
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTY5OWNhNzJjYzA1MTgxYjNhZTg3NCIsImVtYWlsIjoidG9uaUB0ZXN0LmNvbSIsInVzZXJuYW1lIjoiUmF0ZSIsImlhdCI6MTc2MDAxNDQ5N30.-8h414pfePyPKtSsrj7Uk6dKlXskqvENFe_2Iah2ZvQ
+
+{
+  "friendId":"68e6994f72cc05181b3ae7fb"
+}
+
+
+### Remove friend from a user
+
+DELETE {{BASE_URL}}/user/friends/remove/68e6994f72cc05181b3ae7fb
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTY5OWNhNzJjYzA1MTgxYjNhZTg3NCIsImVtYWlsIjoidG9uaUB0ZXN0LmNvbSIsInVzZXJuYW1lIjoiUmF0ZSIsImlhdCI6MTc2MDAxNDQ5N30.-8h414pfePyPKtSsrj7Uk6dKlXskqvENFe_2Iah2ZvQ
+
+
+
+### Get all user Friends
+
+GET {{BASE_URL}}/user/friends/all
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTY5OWNhNzJjYzA1MTgxYjNhZTg3NCIsImVtYWlsIjoidG9uaUB0ZXN0LmNvbSIsInVzZXJuYW1lIjoiUmF0ZSIsImlhdCI6MTc2MDAxNDQ5N30.-8h414pfePyPKtSsrj7Uk6dKlXskqvENFe_2Iah2ZvQ
+

@@ -9,7 +9,14 @@ const UserSchema = new Schema(
     password: { type: String, required: true },
     refreshToken: String,
     avatarUrl: String,
-    friends: [{ type: String }],
+    friends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+        unique: true,
+      },
+    ],
     lastLogin: Date,
   },
   {

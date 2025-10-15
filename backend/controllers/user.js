@@ -120,3 +120,72 @@ export async function GetAllOtherUsers(req, res) {
     res.status(500).json({ errorMessage: error.message });
   }
 }
+
+export async function AddFriend(req, res) {
+  try {
+    const { id } = req.user;
+    const { friendId } = req.body;
+    const user = await User.findById(id);
+
+    const existingFriend = user.friends.includes(friendId);
+    const usernameFriend = await User.findById(friendId);
+    const username = usernameFriend.username;
+    console.log("Username friend", username);
+    if (!existingFriend) {
+      user.friends.push(friendId);
+      await user.save();
+      res.status(201).json({
+        success: true,
+        newFriend: { _id: friendId, username: username },
+      });
+    } else {
+      res.status(200).json({ success: true, message: "Friend already exists" });
+    }
+  } catch (error) {
+    console.log("Error with adding friend ", error.message);
+  }
+}
+
+export async function RemoveFriend(req, res) {
+  try {
+    const { id } = req.params;
+    const friendId = id;
+    const user = req.user;
+
+    const findUser = await User.findById(user.id);
+    const friend = await User.findById(friendId);
+    const removedFriend = findUser.friends.find(
+      (friend) => friend._id.toString() === friendId
+    );
+
+    if (!removedFriend) {
+      return res.status(404).json({ message: "Friend not found" });
+    }
+
+    findUser.friends = findUser.friends.filter(
+      (friend) => friend._id != friendId
+    );
+
+    await findUser.save();
+    res.status(200).json({
+      success: true,
+      removedFriend: { id: removedFriend, username: friend.username },
+    });
+  } catch (error) {
+    console.log("Error with RemoveFriend ", error.message);
+  }
+}
+
+export async function GetFriends(req, res) {
+  try {
+    const { id } = req.user;
+
+    const user = await User.findById(id).populate("friends", "username _id");
+    const userFriends = user.friends;
+
+    console.log("User ID", userFriends);
+    res.status(200).json({ userFriends: userFriends });
+  } catch (error) {
+    console.log("Error with getting friend", error.message);
+  }
+}

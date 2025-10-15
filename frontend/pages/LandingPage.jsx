@@ -1,15 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { CheckToken } from "../api/auth/CheckToken";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { socket } from "../../backend/utils/SocketIO";
+import { UserList } from "../components/Users/UserList";
+import { FriendList } from "../components/Users/FriendList";
+
 export function LandingPage() {
   const API_URL = import.meta.env.VITE_API_URL;
+  const [showFriends, setShowFriends] = useState(false);
+  const [userFriends, setUserFriends] = useState([]);
   const [user, setUser] = useState({ id: "", email: "", username: "" });
   const [otherUsers, setOtherUsers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
   const [currentChat, setCurrentChat] = useState();
+  const messagesEndRef = useRef(null);
+  useEffect(() => {
+    console.log("userFriends changed:", userFriends);
+  }, [userFriends]);
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   useEffect(() => {
     socket.emit("connection", () => {
@@ -95,26 +107,37 @@ export function LandingPage() {
       console.log(error.message);
     }
   }
+  async function TokenResponse() {
+    const response = await CheckToken();
+
+    const user = response.data.user;
+    setUser({ id: user.id, email: user.email, username: user.username });
+    /* console.log("User Token ", user); */
+  }
+  async function getUsers() {
+    const response = await axios.get(`${API_URL}/user/others`, {
+      withCredentials: true,
+    });
+    console.log("Response of getUsers ", response.data.users);
+    const users = response.data.users;
+
+    setOtherUsers(users);
+  }
+  async function getUserFriends() {
+    /*  Returns an array of id and username */
+    const response = await axios.get(`${API_URL}/user/friends/all`, {
+      withCredentials: true,
+    });
+    if (response.status === 200) {
+      const userFriends = response.data.userFriends;
+
+      setUserFriends(userFriends);
+    }
+  }
   useEffect(() => {
-    async function TokenResponse() {
-      const response = await CheckToken();
-
-      const user = response.data.user;
-      setUser({ id: user.id, email: user.email, username: user.username });
-      /* console.log("User Token ", user); */
-    }
-
-    async function getUsers() {
-      const response = await axios.get(`${API_URL}/user/others`, {
-        withCredentials: true,
-      });
-      /* console.log("Response of getUsers ", response.data.users); */
-      const users = response.data.users;
-
-      setOtherUsers(users);
-    }
     TokenResponse();
     getUsers();
+    getUserFriends();
   }, []);
 
   return (
@@ -134,29 +157,37 @@ export function LandingPage() {
             </button>
           </a>
         </h1>
-
         <div className="flex">
           <div className="border w-2/4 ">
-            {" "}
-            <h1>Users</h1>
-            <ul>
-              {otherUsers.map((item, index) => (
-                <li key={index}>
-                  {item._id} | {item.username}{" "}
-                  <button
-                    className="bg-blue-100 p-2 my-2"
-                    onClick={() => StartChat(item._id)}
-                  >
-                    {" "}
-                    Chat
-                  </button>
-                  <button className="bg-green-100 ml-2 p-2 my-2">
-                    {" "}
-                    Add friend
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <button
+              onClick={() => setShowFriends(false)}
+              className={`pb-1 border-b-2 ${
+                !showFriends ? "border-blue-500" : "border-transparent"
+              }`}
+            >
+              Users
+            </button>{" "}
+            <button
+              onClick={() => setShowFriends(true)}
+              className={`pb-1 border-b-2 ${
+                showFriends ? "border-blue-500" : "border-transparent"
+              }`}
+            >
+              Friends
+            </button>
+            {showFriends ? (
+              <FriendList
+                friends={userFriends}
+                StartChat={StartChat}
+                setFriends={setUserFriends}
+              />
+            ) : (
+              <UserList
+                otherUsers={otherUsers}
+                StartChat={StartChat}
+                setFriends={setUserFriends}
+              />
+            )}
           </div>
 
           <div className="border w-3/4 relative min-h-full">
@@ -176,23 +207,28 @@ export function LandingPage() {
 
             <h1>Current Chat {currentChat}</h1>
             <ul>
-              {messages.map((message) => (
-                <li key={message._id}>
-                  {/*  Message ID {message._id} SenderID {message.senderId._id} */}
-                  <div className="font-bold"></div>
-                  {message.senderId._id === user.id ? (
-                    <div className="text-right">
-                      <h1> {message.senderId.username}</h1>
-                      <p>{message.content}</p>
-                    </div>
-                  ) : (
-                    <div className="text-left">
-                      <h1>{message.senderId.username}</h1>
-                      <p>{message.content}</p>
-                    </div>
-                  )}
-                </li>
-              ))}
+              <ul className="h-80 overflow-y-auto p-4 space-y-2 border border-gray-300">
+                {messages.map((message) => (
+                  <li key={message._id}>
+                    {message.senderId._id === user.id ? (
+                      <div className="text-right">
+                        <h1 className="font-bold">
+                          {message.senderId.username}
+                        </h1>
+                        <p>{message.content}</p>
+                      </div>
+                    ) : (
+                      <div className="text-left">
+                        <h1 className="font-bold">
+                          {message.senderId.username}
+                        </h1>
+                        <p>{message.content}</p>
+                      </div>
+                    )}
+                    <div ref={messagesEndRef} />
+                  </li>
+                ))}
+              </ul>
             </ul>
             <div className="absolute bottom-0 left-0 w-full flex flex-col">
               <input
@@ -212,6 +248,14 @@ export function LandingPage() {
             </div>
           </div>
         </div>
+        <h1>Friends</h1>
+        {userFriends.map((item, index) => {
+          return (
+            <li key={index} className="">
+              {item.username}
+            </li>
+          );
+        })}
       </div>
     </div>
   );
